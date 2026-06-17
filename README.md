@@ -1,6 +1,14 @@
 # Review
 
-A Claude Code skill for systematically organizing medical course review materials. Extracts knowledge from syllabi, teaching calendars, lecture slides, exam guides, and question banks, producing structured review notes backed by source attribution and cross-validated against three independent sources.
+A Claude Code skill for systematically organizing medical course review materials. Syllabi as skeleton, lecture slides as substance, teaching calendars as timeline — producing structured review notes with exhaustive extraction, source attribution, and mandatory post-generation audit. Validated against three medical courses.
+
+## Provenance
+
+This skill was designed and iterated through real clinical medicine exam preparation. Three courses validated:
+
+- Surgery (考查课, 9 chapters, 8 slide decks) — student reported full exam coverage
+- Preventive Medicine (考试课, 6 chapters, 13 slide decks + independent calendar) — matched original notes
+- Anesthesiology (考查课, 10 chapters, 5 slide decks + review guide) — first-pass generation
 
 ## Design Philosophy
 
@@ -88,6 +96,7 @@ course-directory/
 ├── scripts/
 │   ├── extract.py                   # Unified extraction (6 formats)
 │   ├── verify.py                    # Post-extraction integrity check
+│   ├── to_html.py                   # Markdown to HTML with sidebar TOC
 │   ├── anki.py                      # Anki CSV flashcard export
 │   └── mindmap.py                   # Mermaid mindmap generator
 └── references/
