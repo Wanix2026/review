@@ -297,33 +297,6 @@ td:first-child { white-space: nowrap; font-weight: 600; }
     font-weight: 400;
 }
 
-/* ---- Fill-in-the-blank (for self-test version) ---- */
-.blanks-only .blank {
-    display: inline-block;
-    min-width: 3em;
-    border-bottom: 2px solid #ccc;
-    text-align: center;
-    color: transparent;
-    margin: 0 2px;
-    cursor: pointer;
-    transition: all .2s;
-}
-.blanks-only .blank.revealed {
-    color: var(--master);
-    border-bottom-color: var(--master);
-    font-weight: 700;
-}
-.blanks-only .blank::after {
-    content: attr(data-hint);
-    color: #ccc;
-    font-weight: 400;
-}
-.blanks-only .blank.revealed::after {
-    content: attr(data-answer);
-    color: var(--master);
-    font-weight: 700;
-}
-
 /* ---- Misc ---- */
 hr { border: none; border-top: 1px solid var(--border-light); margin: 20px 0; }
 ul, ol { margin: 4px 0 4px 22px; }
@@ -444,20 +417,6 @@ document.addEventListener('click', function(e) {
     var m = document.getElementById('menu-btn');
     if (!s.contains(e.target) && e.target !== m) {
         s.classList.remove('open');
-    }
-});
-// Fill-in-the-blank reveal
-document.querySelectorAll('.blank').forEach(function(b) {
-    b.addEventListener('click', function() {
-        this.classList.toggle('revealed');
-    });
-});
-// Reveal all blanks (press R key)
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'r' || e.key === 'R') {
-        document.querySelectorAll('.blank').forEach(function(b) {
-            b.classList.toggle('revealed');
-        });
     }
 });
 </script>
