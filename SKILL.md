@@ -12,11 +12,11 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 ## 铁律
 
 1. 每条知识点必须能追溯到大纲/PPT原文 — 找不到来源就标注 `[待补充]`
-2. 数值原文照录，不改格式、不丢单位（`5-10 cmH₂O` ≠ `5~10`）
+2. 数值原文照录，不改格式、不丢单位、不四舍五入（`5-10 cmH₂O` ≠ `5~10`）
 3. 操作步骤逐条列出不合并，表格保持结构不拆散
-4. 大纲子项全覆盖 — 6个子项缺一个就是遗漏
-5. PPT没写的内容标注 `[PPT缺失]`，不自己推断
-6. 不用"等"字省略，不跨文件拼接知识点，不凭记忆写摘要
+4. 大纲子项全覆盖 — 大纲写6个子项输出必须有6个，缺一漏一
+5. PPT没写的内容标注 `[PPT缺失]`，**绝不**自己推断补全，哪怕答案看起来"显然"
+6. **绝不**用"等"省略条目，**绝不**跨文件拼接知识点，**绝不**凭记忆写摘要，**绝不**改写原文使之"更流畅"
 
 ## 流程
 
@@ -38,7 +38,7 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 **Step 2 — 章节映射**
 建立大纲章节→日历周次→PPT文件的对应关系，四层匹配：
 1. 编号（"第三章"↔"Week5"↔"03-xxx"）
-2. 内容采样（打开PPT第一页标题 vs 大纲章节的内容描述 → 解决PPT用教材章号的常见不一致）
+2. 内容采样（打开PPT首slide实际标题 → 提取关键词 → 与大纲每章"教学内容"段做子串重叠比对 → 重叠度最高的匹配。关键：PPT用教材章号而大纲用自编号时，这步是唯一正确匹配方式）
 3. 关键词重叠度
 4. 日历桥接
 
@@ -49,6 +49,7 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 - 从复习重点文件自动扫描题型分布
 - 检测不到题型信息 → 默认纯知识点整理，不追问
 - 第二次使用该目录 → 读取 `.course-cache/config.json` 跳过全部确认
+- 维护 `~/.claude/skills/review/projects.json` 记录所有处理过的课程及其配置
 
 **Step 4 — 环境检查**
 检查 pdf2txt/python-pptx/python-docx/openpyxl 是否可用，缺失提示安装命令。
@@ -63,7 +64,10 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 
 **规则**：
 - 每个文件计算 SHA256，已完成的不重复提取
-- PDF先诊断（文字版/扫描版/加密），加密PDF给修复建议
+- PDF先诊断（文字版/扫描版/加密），失败给具体修复建议：
+  - 加密 → "请用Preview打开，File→Export→取消密码后重新放入"
+  - .doc → "请用Word打开后另存为.docx"
+  - 扫描版 → "自动切换OCR，如效果不好建议用Adobe Scan重扫"
 - PPT提取时标注 SmartArt/图片缺失
 - 进度输出 `[████░░] 8/13`
 - 提取后运行 `python3 scripts/verify.py .course-cache/manifest.json .course-cache/extracted/`
@@ -84,7 +88,13 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 | 熟悉 | 有 | 无 | 警告缺口 |
 | 无 | 有 | 有 | 新增（大纲未更新） |
 
-冲突处理：日历优先、PPT内容优先、两份PPT数值冲突→标注 `[PPT-A写X, PPT-B写Y]`
+冲突处理：
+1. 日历与大纲冲突 → 以日历为准，保留大纲原文为注释
+2. PPT与大纲冲突 → 以PPT为准
+3. 两份PPT数值冲突 → `[两版PPT不一致: A写X, B写Y，建议核实]`
+4. PPT内部前后矛盾 → `[PPT此处写X，但前文写Y，以最新PPT为准]`
+5. 大纲说"了解"但日历给大量学时 → `[大纲与实际教学不符]` 建议升级权重
+6. 所有冲突显式标注，不静默裁决
 
 有致命缺口时展示缺口报告，每项缺三选一：补文件 / 确认缺失 / 移除此章。最多2轮。
 
