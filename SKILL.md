@@ -1,6 +1,6 @@
 ---
 name: review
-description: 为医学生整理课程复习资料。从大纲、教学日历、PPT、复习重点、题库中提取知识点，生成结构化复习笔记。未提供题型时默认纯知识点整理。
+description: Turns syllabi and lecture slides into exhaustive, source-attributed review notes. Designed for medical students. Extracts from syllabus, calendar, PPT, exam guides, and question banks. Defaults to pure knowledge organization without question-type labels.
 argument-hint: "<课程目录路径>"
 allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 ---

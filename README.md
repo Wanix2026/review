@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![scripts](https://img.shields.io/badge/scripts-6%20Python%20files-306998)](scripts/)
 
-A Claude Code skill for systematically organizing medical course review materials. Syllabi as skeleton, lecture slides as substance, teaching calendars as timeline — producing structured review notes with exhaustive extraction, source attribution, and mandatory post-generation audit. Validated against three medical courses.
+Turns syllabi and lecture slides into exhaustive, source-attributed review notes — every claim traceable, every value verbatim, nothing fabricated. Designed for medical students, validated across surgery, preventive medicine, and anesthesiology.
 
 ## Demo
 
