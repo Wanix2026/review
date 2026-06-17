@@ -1,6 +1,52 @@
 # Review
 
+[![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-6e47ff)](https://claude.ai/code)
+[![3 courses validated](https://img.shields.io/badge/validated-3%20courses-success)](#provenance)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![scripts](https://img.shields.io/badge/scripts-6%20Python%20files-306998)](scripts/)
+
 A Claude Code skill for systematically organizing medical course review materials. Syllabi as skeleton, lecture slides as substance, teaching calendars as timeline — producing structured review notes with exhaustive extraction, source attribution, and mandatory post-generation audit. Validated against three medical courses.
+
+## Demo
+
+```
+$ /review ~/Desktop/HMC/大三下/外科
+
+Phase 0 · 扫描 + 分类
+  大纲 ✅  2023级-《外科学总论》教学大纲.pdf
+  日历 ✅  嵌入大纲各章的学时分配表
+  PPT   8 files covering 9 theory chapters
+  分类置信度: 9/9 auto-approved (≥85%)
+
+Phase 1 · 提取 [██████████] 9/9 ✅
+  PDF: 01绪论 02休克 03感染... → 175K chars
+  PPTX: 水电解质 创伤 营养... → 81K chars
+
+Phase 2 · 交叉验证
+  Ch1-Ch9: ✅ confirmed
+  Ch10 综合实训: — practice-only, excluded
+  0 fatal gaps · 0 warnings
+
+Phase 3 · 生成
+  → 外科学总论-复习笔记.md  (exhaustive extraction, 83 h3 sections)
+  → 外科学总论-复习笔记.html (sidebar TOC with search, print-ready)
+  → 外科学总论-记忆卡.anki.csv
+```
+
+**Output preview** (Surgery, Chapter 6 — Surgical Infection):
+
+> ### 破伤风  
+> | 项目 | 内容 |
+> |------|------|
+> | 病原 | **破伤风梭菌** (G⁺ anaerobic bacillus), produces **tetanospasmin** |
+> | 潜伏期 | Typically **6–10 days** (shorter = more severe) |
+> | 典型表现 | **Risus sardonicus** → **Trismus** → **Opisthotonos** → Respiratory failure |
+> | 预防 | Debridement + active immunization (toxoid) + passive: **TAT 1500 IU** or **TIG 250–500 IU** |
+> | 治疗 | Metronidazole + TAT/TIG + Diazepam + Tracheostomy if needed |
+>
+> **可能的考点**  
+> PPT末页思考题 → 破伤风的临床表现和防治（掌握级）  
+> 大纲双重点 → 脓毒症概念及qSOFA三项快速筛查
 
 ## Provenance
 
