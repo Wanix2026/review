@@ -35,7 +35,7 @@
 body {
     font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",-apple-system,sans-serif;
     font-size: 15.2px;
-    line-height: 1.65;
+    line-height: 1.8;
     color: var(--text);
     background: var(--bg);
 }
@@ -112,6 +112,23 @@ body {
     background: #f7f7f7;
     border-left-color: #ddd;
 }
+#sidebar li a.sub {
+    padding: 3px 18px 3px 32px;
+    font-size: .73em;
+    color: #999;
+    border-left: 3px solid transparent;
+}
+#sidebar li a.sub:hover {
+    color: #555;
+    background: #f7f7f7;
+    border-left-color: #ddd;
+}
+#sidebar li a.sub.active {
+    color: #555;
+    background: var(--sidebar-active);
+    border-left-color: #999;
+    font-weight: 500;
+}
 #sidebar li a.active {
     color: #111;
     background: var(--sidebar-active);
@@ -171,7 +188,7 @@ h2 {
     font-size: 1.16em;
     font-weight: 700;
     color: var(--heading);
-    margin: 34px 0 10px;
+    margin: 40px 0 14px;
     padding: 0 0 8px 12px;
     border-bottom: 1px solid var(--border-light);
     border-left: 4px solid #222;
@@ -181,11 +198,11 @@ h3 {
     font-size: 1.02em;
     font-weight: 600;
     color: #333;
-    margin: 22px 0 8px;
+    margin: 28px 0 10px;
     scroll-margin-top: 24px;
 }
 h4 { font-size: .96em; font-weight: 600; color: #444; margin: 16px 0 6px; }
-p { margin: 3px 0; }
+p { margin: 8px 0; }
 strong { color: var(--master); font-weight: 700; }
 
 /* ---- Mastery dots ---- */
@@ -264,10 +281,10 @@ table {
 }
 th, td {
     border: 1px solid var(--border);
-    padding: 6px 10px;
+    padding: 8px 12px;
     text-align: left;
     vertical-align: top;
-    line-height: 1.45;
+    line-height: 1.55;
 }
 th {
     background: var(--table-header);
