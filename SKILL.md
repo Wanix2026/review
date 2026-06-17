@@ -165,6 +165,8 @@ PPT末页思考题 → [原文照录]
 - **Anki**: `python3 scripts/anki.py <笔记.md>` → CSV记忆卡
 - **Mermaid**: `python3 scripts/mindmap.py <笔记.md>` 嵌入 Markdown
 
+**Phase 3 末尾自动执行**：生成完 MD 后立即运行 `python3 scripts/to_html.py <笔记.md>` 生成 HTML。如果转换脚本报错或内容比<50%，检查 MD 格式后重新生成。
+
 ---
 
 ### 题库处理（可选）

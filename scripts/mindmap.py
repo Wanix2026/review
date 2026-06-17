@@ -18,16 +18,15 @@ def build_tree(md_path):
             tree['title'] = h1.group(1).strip('# ').replace('复习笔记', '').strip()
             continue
 
-        # h2 = 章节
-        h2 = re.match(r'^##\s+(第[^（]+)[（(](\d+)[学时小时)]', line)
+        # h2 = 章节 (handles both "第X章 章节名" and "第X章 章节名（X学时）")
+        h2 = re.match(r'^##\s+(第[^（(]+)', line)
         if h2:
-            name = h2.group(1).strip()
-            hours = h2.group(2)
-            # 提取 🔥 标记
-            weight = '🔥' if '🔥' in line else ''
+            name = h2.group(1).strip().replace('· 重点章', '').strip()
+            # Extract 重点章 marker
+            weight = ' 重点章' if '重点章' in line else ''
             current_chapter = {
-                'name': f'{name}',
-                'hours': hours,
+                'name': f'{name}{weight}',
+                'hours': '',
                 'weight': weight,
                 'children': []
             }
@@ -59,13 +58,10 @@ def to_mermaid(tree, indent=0):
     lines.append(f'  root(({title}))')
 
     for ch in tree.get('children', []):
-        hours = ch.get('hours', '')
         weight = ch.get('weight', '')
         label = f"{ch['name']}"
-        if hours:
-            label += f"  {hours}h"
         if weight:
-            label += f"  {weight}"
+            label += f"  [{weight.strip()}]"
         lines.append(f'    {label}')
 
         for sec in ch.get('children', []):

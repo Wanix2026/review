@@ -3,9 +3,21 @@
 
 import re, html as htmllib, sys, os
 
+def slugify(text, max_len=50):
+    """Generate a URL-safe slug from Chinese/English text."""
+    s = re.sub(r'[^\w一-鿿]', '', text)
+    return ('sec-' + s)[:max_len]
+
 def convert(md_path, template_path, output_path=None):
     if output_path is None:
         output_path = md_path.replace('.md', '.html')
+
+    if not os.path.exists(md_path):
+        print(f"❌ 文件不存在: {md_path}")
+        return None
+    if not os.path.exists(template_path):
+        print(f"❌ 模板不存在: {template_path}")
+        return None
 
     with open(md_path) as f: md = f.read()
     with open(template_path) as f: template = f.read()
@@ -20,14 +32,14 @@ def convert(md_path, template_path, output_path=None):
     for line in md.split('\n'):
         if line.startswith('## '):
             title = line[3:].strip()
-            slug = 'sec-' + re.sub(r'[（）()\s\.🔥·重点章]', '', title)[:40]
+            slug = slugify(title, 40)
             sidebar_items.append(f'        <li><a href="#{slug}">{htmllib.escape(title)}</a></li>')
             ch_idx += 1
         elif line.startswith('### '):
             title = line[4:].strip()
             if title in ('大纲要求', '可能的考点', '内容要点', '标记说明'):
                 continue
-            base = 'sec-' + re.sub(r'[（）()\s\.●○·🔥]', '', title)[:50]
+            base = slugify(title, 50)
             slug = base if base not in seen_slugs else f'{base}-ch{ch_idx}'
             seen_slugs.add(slug)
             sidebar_items.append(f'        <li><a class="sub" href="#{slug}">{htmllib.escape(title)}</a></li>')
@@ -80,13 +92,13 @@ def convert(md_path, template_path, output_path=None):
 
         if line.startswith('## '):
             title = line[3:].strip()
-            base = 'sec-' + re.sub(r'[（）()\s\.🔥·重点章]', '', title)[:40]
+            base = slugify(title, 40)
             ch_idx2 += 1
             result.append(f'<h2 id="{base}">{htmllib.escape(title)}</h2>')
             i += 1; continue
         if line.startswith('### '):
             title = line[4:].strip()
-            base = 'sec-' + re.sub(r'[（）()\s\.●○·🔥]', '', title)[:50]
+            base = slugify(title, 50)
             slug = base if base not in seen_slugs2 else f'{base}-ch{ch_idx2}'
             seen_slugs2.add(slug)
             result.append(f'<h3 id="{slug}">{htmllib.escape(title)}</h3>')
@@ -121,7 +133,20 @@ def convert(md_path, template_path, output_path=None):
 
     h2n = len([l for l in sidebar_items if 'class="sub"' not in l])
     h3n = len([l for l in sidebar_items if 'class="sub"' in l])
-    print(f'✅ {os.path.basename(output_path)}: {len(html):,} bytes · 侧栏 {h2n}章+{h3n}子节')
+
+    # Char-count sanity check: HTML text should not be drastically shorter than MD
+    import html as _h
+    md_text = re.sub(r'[#*>\-\|\s]', '', md)
+    html_text = re.sub(r'<[^>]+>', '', html)
+    html_text = re.sub(r'\s', '', html_text)
+    ratio = len(html_text) / max(len(md_text), 1)
+    warning = ''
+    if ratio < 0.5:
+        warning = ' ⚠️ HTML字符数不足MD的50%，转换可能有遗漏'
+    elif ratio < 0.8:
+        warning = ' (content ratio OK)'
+
+    print(f'✅ {os.path.basename(output_path)}: {len(html):,} bytes · 侧栏 {h2n}章+{h3n}子节 · 内容比 {ratio:.0%}{warning}')
     return output_path
 
 if __name__ == '__main__':

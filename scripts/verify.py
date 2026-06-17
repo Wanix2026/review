@@ -74,8 +74,11 @@ def verify_all(manifest_path, extract_dir):
     """验证全部已提取文件"""
     manifest = json.loads(Path(manifest_path).read_text())
     results = {}
+    files = manifest.get('files', manifest)  # Support both formats
 
-    for filename, info in manifest.items():
+    for filename, info in files.items():
+        if not isinstance(info, dict):
+            continue
         if info.get('status') not in ('ok', 'ok_ocr'):
             results[filename] = {'pass': False, 'skip': True, 'reason': info.get('status')}
             continue
