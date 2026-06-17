@@ -68,6 +68,34 @@ body {
     padding: 0 18px 14px;
     text-transform: uppercase;
 }
+#sidebar .search-box {
+    margin: 0 12px 12px;
+    position: relative;
+}
+#sidebar .search-box input {
+    width: 100%;
+    padding: 5px 8px 5px 22px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: .78em;
+    background: #fff;
+    outline: none;
+    transition: border-color .15s;
+}
+#sidebar .search-box input:focus {
+    border-color: #999;
+}
+#sidebar .search-box::before {
+    content: "⌕";
+    position: absolute;
+    left: 7px;
+    top: 4px;
+    font-size: .85em;
+    color: #aaa;
+}
+#sidebar li a.hidden-by-search {
+    display: none;
+}
 #sidebar ul { list-style: none; margin: 0; padding: 0; }
 #sidebar li a {
     display: block;
@@ -367,6 +395,9 @@ a:hover { text-decoration: underline; }
 
 <nav id="sidebar">
     <h3>复习提纲</h3>
+    <div class="search-box">
+        <input type="text" id="toc-search" placeholder="搜索章节..." autocomplete="off">
+    </div>
     <ul>
 {{SIDEBAR_ITEMS}}
     </ul>
@@ -412,6 +443,14 @@ window.addEventListener('scroll', function() {
     bb.style.display = window.scrollY > 400 ? 'block' : 'none';
 });
 // Close sidebar on outside click
+// Sidebar search
+document.getElementById('toc-search').addEventListener('input', function() {
+    var query = this.value.toLowerCase().trim();
+    document.querySelectorAll('#sidebar li a').forEach(function(a) {
+        var match = !query || a.textContent.toLowerCase().indexOf(query) > -1;
+        a.classList.toggle('hidden-by-search', !match);
+    });
+});
 document.addEventListener('click', function(e) {
     var s = document.getElementById('sidebar');
     var m = document.getElementById('menu-btn');
