@@ -47,10 +47,10 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 
 **Step 3 — 上下文确认**
 - 从大纲"考核方式"段自动抽取：考试课/考查课、卷面门槛
-- 从复习重点文件自动扫描题型分布
-- 检测不到题型信息 → 默认纯知识点整理，不追问
+- **主动询问用户一次**："是否知道考试题型和分值分布？（如 A1单选/X多选/名词解释/简答题等）"
+  - 用户提供 → 记录，启用题型驱动模式（名词解释提取 + 题型标签 + 名词解释汇总 section）
+  - 用户说不知道或没有 → 默认纯知识点整理模式，不追问第二次
 - 第二次使用该目录 → 读取 `.course-cache/config.json` 跳过全部确认
-- 维护 `~/.claude/skills/review/projects.json` 记录所有处理过的课程及其配置
 
 **Step 4 — 环境检查**
 检查 pdf2txt/python-pptx/python-docx/openpyxl 是否可用，缺失提示安装命令。

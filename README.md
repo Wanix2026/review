@@ -71,22 +71,59 @@ git clone https://github.com/Wanix2026/review.git ~/.claude/skills/review
 pip3 install python-pptx python-docx openpyxl pdfminer.six
 ```
 
+Restart Claude Code. The skill loads automatically.
+
 ## Usage
 
-Invoke within Claude Code:
+### Generate review notes
+
+Organize your course folder:
 
 ```
-/review /path/to/course-directory
+外科学/
+├── 大纲.pdf          ← syllabus (required)
+├── 课件/             ← lecture slides
+│   ├── 01绪论.pdf
+│   ├── 02休克.pdf
+│   └── ...
+└── 复习重点.docx      ← exam guide (optional)
 ```
 
-Or describe naturally: "Help me organize review materials for this course" — the skill loads automatically.
+In Claude Code:
 
-### Dual Mode
+```
+/review ~/Desktop/外科学
+```
+
+The skill scans, classifies, extracts, cross-validates, and generates. Confirm once at the start, then wait. Output:
+
+```
+外科学/
+├── 外科学-复习笔记.md       ← Markdown source
+├── 外科学-复习笔记.html     ← sidebar TOC + search + print
+├── 外科学-记忆卡.anki.csv   ← Anki import
+└── 外科学-思维导图.md       ← Mermaid chapter map
+```
+
+### Extract question banks
+
+**From PDF/Word files**: drop the file into the course folder. The skill auto-detects, cleans (strips explanations, student answers, separators), and exports `.docx` for import into 考试宝 or other flashcard apps.
+
+**From web platforms (人卫/学习通)**: open the exam page in your browser, press F12 to open the Console, paste this extraction script:
+
+```javascript
+// Dump all visible text from the exam page
+console.log(document.body.innerText);
+```
+
+Copy the Console output, paste it into Claude Code with: "Clean this question bank — keep only question type, stem, options, and correct answer. Remove explanations, student answers, and separators. Export as .docx."
+
+### Dual mode
 
 | Condition | Behavior |
 |-----------|----------|
-| User provides question types and exam format | Type-driven output with structured sections for each question type |
-| No question types provided (default) | Pure knowledge organization — no question type labels, no dedicated terminology sections |
+| Question types provided | Structured sections per question type (A1/A2/B1/名词解释/简答) |
+| No types given (default) | Pure knowledge organization — no type labels |
 
 ## Pipeline
 
