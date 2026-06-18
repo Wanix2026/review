@@ -14,27 +14,32 @@ def extract_blocks(text):
         if m:
             blocks.append(('概念清单', kw, m.group(1).strip()[:2000]))
 
-    # 2. 找所有章节标题和对应的教学要求/重点难点
-    ch_pattern = r'(第[一二三四五六七八九十\d]+章[^\n]{0,60})\n'
+    # 2. 找所有章节标题（支持"第X章"和"（一）"两种格式）
+    ch_pattern = r'((?:第[一二三四五六七八九十\d]+章|（[一二三四五六七八九十]+）)[^\n]{0,60})\n'
     for ch_m in re.finditer(ch_pattern, text):
         chapter = ch_m.group(1).strip()
         start = ch_m.end()
-        # 找到下一章的位置作为边界
         next_ch = re.search(ch_pattern, text[start:])
         end = start + next_ch.start() if next_ch else len(text)
         body = text[start:end]
 
-        # 提取教学目的和要求中的掌握/熟悉/了解
-        m = re.search(r'【教学目的和要求】(.*?)(?:【|\Z)', body, re.DOTALL)
+        # 格式A: 【教学目的和要求】 或 【教学内容、目的和要求】
+        m = re.search(r'【教学(?:内容[,、]?\s*)?目的[,、]?\s*要求】(.*?)(?:【|\Z)', body, re.DOTALL)
         if m:
             content = m.group(1).strip()[:1500]
-            # 提取含掌握/熟悉/了解的句子
             mastery_lines = re.findall(r'[^。\n]{0,10}(?:掌握|熟悉|了解)[^。\n]{5,150}', content)
             if mastery_lines:
                 blocks.append(('教学要求', chapter, '\n'.join(mastery_lines)))
 
-        # 提取教学重点/难点
-        m = re.search(r'【教学重点[,、]?\s*难点】(.*?)(?:【|\Z)', body, re.DOTALL)
+        # 格式B: 【掌握】【熟悉】【了解】 直接标注（麻醉学格式）
+        for level_kw in ['掌握', '熟悉', '了解']:
+            for m in re.finditer(rf'【{level_kw}】([^【]{{5,200}}?)(?:【|\Z)', body):
+                content = m.group(1).strip()[:500]
+                if content:
+                    blocks.append(('教学要求', chapter, f'【{level_kw}】{content}'))
+
+        # 格式C: 【(本章)教学重点、难点】 或 【教学重点、难点】
+        m = re.search(r'【(?:本章)?\s*教学重点[,、]?\s*难点】(.*?)(?:【|\Z)', body, re.DOTALL)
         if m:
             content = m.group(1).strip()[:1500]
             if content:
