@@ -185,6 +185,10 @@ PPT末页思考题 → [原文照录]
 
 ---
 
+### 名词解释提取（用户提供题型且含"名词解释"时）
+
+先运行 `python3 scripts/noun_extract.py .course-cache/extracted/大纲.txt`，脚本输出大纲中所有与概念定义相关的关键段落。阅读输出后识别候选术语，完整定义从 PPT 原文照录不缩减。按掌握度着色，汇总到独立 section。
+
 ### 衍生输出（生成后自动）
 
 - **Anki**: `python3 scripts/anki.py <笔记.md>` → CSV记忆卡
